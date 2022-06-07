@@ -22,7 +22,7 @@
     <tr>
       <td id="table-form">
         <form id="addForm">
-           <input type="text" id="name" placeholder="User Name">&nbsp;
+            <input type="text" id="name" placeholder="User Name">
             <input type="email" id="email" placeholder="Email ID">
            <input type="text" id="location" placeholder="Location">
            <input type="date" id="date" placeholder="Birth Date">
@@ -51,7 +51,7 @@
 <script type="text/javascript">
   $(document).ready(function(){
     // Load Table Records
-    function loadTable(){
+    function loadData(){
       $.ajax({
         url : "ajax_load-data.php",
         type : "POST",
@@ -60,7 +60,7 @@
         }
       });
     }
-    loadTable(); // Load Table Records on Page Load
+    loadData(); // Load Table Records on Page Load
 
     // Insert New Records
     $("#save-button").on("click",function(e){
@@ -80,7 +80,7 @@
           data : {stname:name, stemail: email,stlocation:location,stdate:date,stphone:phone},
           success : function(data){
             if(data == 1){
-              loadTable();
+              loadData();
               $("#addForm").trigger("reset");
               $("#success-message").html("Data Inserted Successfully.").slideDown();
               $("#error-message").slideUp();
@@ -88,13 +88,33 @@
               $("#error-message").html("Can't Save Record.").slideDown();
               $("#success-message").slideUp();
             }
-
           }
         });
       }
-
     });
 
+// delete Data from records
+$(document).on('click','.delete-btn',function(){
+  var deleteInfo = $(this).data("id");
+  var deleteElement = this;
+  confirm('sure to delete this record ?')
+
+  $.ajax({
+    url:'ajax_deleteData.php',
+    type:'POST',
+    data:{deleteId:deleteInfo},
+    success: function(data){
+      if (data ==1) {
+        $(deleteElement).closest('tr').fadeOut();
+      }
+      else{
+        $('#error-messege').html('can\'t delete data').slideDown()
+        $('#success-messege').slideUp();
+      }
+      
+    }
+  })
+})
     //Delete Records
     // $(document).on("click",".delete-btn", function(){
     //   if(confirm("Do you really want to delete this record ?")){
