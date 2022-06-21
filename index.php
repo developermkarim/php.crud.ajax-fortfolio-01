@@ -26,7 +26,7 @@
             <input type="email" id="email" placeholder="Email ID">
            <input type="text" id="location" placeholder="Location">
            <input type="date" id="date" placeholder="Birth Date">
-           <input type="number" id="phone" placeholder="Phone No.">
+           <input type="number" id="phone" class="phone-style" placeholder="Phone No.">
           <input type="submit" id="save-button" value="Save">
         </form>
       </td>
@@ -38,13 +38,15 @@
   </table>
   <div id="error-message"></div>
   <div id="success-message"></div>
+
+  <!-- Modal Box for Update Data  -->
   <div id="modal">
     <div id="modal-form">
       <h2>Edit Form</h2>
-      <table cellpadding="10px" width="100%">
-      </table>
-      <div id="close-btn">X</div>
-    </div>
+ <table border="1" width="100%" cellspacing="0" cellpadding="10px">
+
+ <div id="close-btn">X</div>
+   </div>
   </div>
 
 <script type="text/javascript" src="js/jquery.js"></script>
@@ -95,10 +97,10 @@
 
 // delete Data from records
 $(document).on('click','.delete-btn',function(){
-  var deleteInfo = $(this).data("id");
-  var deleteElement = this;
   confirm('sure to delete this record ?')
-
+  var deleteInfo = $(this).data("del_id");
+  var deleteElement = this;
+ 
   $.ajax({
     url:'ajax_deleteData.php',
     type:'POST',
@@ -119,18 +121,58 @@ $(document).on('click','.delete-btn',function(){
     //  show Modal in Update data  Box Here
 $(document).on('click','.edit-btn',function(){
   $('#modal').show();
-  
-  $(document).on('click','#close-btn',function(){
+  var edite_id = $(this).data('ed_id');
+$.ajax({
+  type:"POST",
+  url:"ajax-load-updateData.php",
+  data:{editId:edite_id},
+  success:function(data){
+$("#modal-form table").html(data);
+  }
+})
+})
+
+  //  Close Modal in Update data  Box Here
+$(document).on('click','#close-btn',function(){
     $('#modal').hide();
   })
+// Update Data to save after input
+$(document).on("click","#update-btn",function(){
+  var edit_id = $('#hidden_edit_id').val();
+  var uname  = $('#uname').val();
+  var uemail = $('#uemail').val();
+  var ulocation = $('#ulocation').val();
+  var udate = $('#udate').val();
+  var uphone = $('#uphone').val();
+
+  $.ajax({
+  type:"POST",
+  url:"ajax-update-submit-data.php",
+  data:{upd_id:edit_id,upd_name:uname,upd_email:uemail,upd_location:ulocation,upd_date:udate,upd_phone:uphone},
+  success:function(data){
+    if (data ==1) {
+      $('#modal').hide();
+      loadData();
+    }
+  }
 })
-    //  Close Modal in Update data  Box Here
-   
+});
     // Update data in showing Modal Box Here
     // Update data in showing Modal Box Here
 
-
-  });
+    // Live Search in ajax crud
+$("#search").on("keyup",function(){
+  var search = $(this).val();
+  $.ajax({
+    type:"POST",
+    url:"ajax-live-searchData.php",
+    data:{searchData:search},
+    success : function(data){
+          $("#table-data").html(data);
+        }
+      });
+   });
+});
 </script>
 </body>
 </html>

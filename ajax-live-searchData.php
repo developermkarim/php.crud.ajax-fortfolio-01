@@ -1,14 +1,9 @@
 <?php
 require_once 'Database.php';
+$search_data = trim($_POST['searchData']);
 $dbobj = new Database;
 $dbconnection = $dbobj->database_function();
-// $dbconnection = new mysqli("localhost","root","","ajax_in_crud");
-if (!$dbconnection) {
-    die("coulnd not connect the database");
-}
-
-$selectQuery = "SELECT * FROM students";
-$stmt = $dbconnection->query($selectQuery);
+$stmt = $dbconnection->query("SELECT * FROM students WHERE Email LIKE '%{$search_data}%' OR Name LIKE '%{$search_data}%' OR Location LIKE '%{$search_data}%' OR Birth_date LIKE '%{$search_data}%' OR phone_number LIKE '%{$search_data}%'");
 $output = "";
 if ($stmt->rowCount() > 0) {
   $output = '<table border="1" width="100%" cellspacing="0" cellpadding="10px">
