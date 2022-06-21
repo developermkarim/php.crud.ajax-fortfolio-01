@@ -6,6 +6,19 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>PHP & Ajax CRUD</title>
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    #pagination a{
+      border: 1px solid green;
+      background-color: orange;
+      color: while;
+      font-weight: bold;
+      padding: 5px 15px;
+    }
+    #pagination .active{
+      background-color: white;
+      color: orange;
+    }
+  </style>
 </head>
 <body>
   <table id="main" border="0" cellspacing="0">
@@ -35,7 +48,13 @@
       <td id="table-data">
       </td>
     </tr>
+    <tr>
+      <td style="text-align: center">
+      </td>
+    </tr>
   </table>
+  
+   
   <div id="error-message"></div>
   <div id="success-message"></div>
 
@@ -172,6 +191,27 @@ $("#search").on("keyup",function(){
         }
       });
    });
+
+   // Page Pagination 
+  function PageLoad(page_data) {
+    
+    $.ajax({
+      type:"POST",
+      url:'ajax-pagination-load.php',
+      data:{page_no:page_data},
+      success: function(data){
+        $('#table-data').html(data);
+      }
+    })
+  }
+  PageLoad();
+  $(document).on('click','#pagination a',function(ev){
+  ev.preventDefault();
+  var page_id = $(this).attr('id');
+  PageLoad(page_id);
+  
+  });
+  
 });
 </script>
 </body>

@@ -2,9 +2,9 @@
 require_once 'Database.php';
 $dbobj = new Database;
 $dbcon_insert = $dbobj->database_function();
-$name = $_POST['stname'];
-$email = $_POST['stemail'];
-$location = $_POST['stlocation'];
+$name = ucfirst($_POST['stname']);
+$email = strtolower($_POST['stemail']);
+$location = ucfirst($_POST['stlocation']);
 $date = $_POST['stdate'];
 $phone = $_POST['stphone'];
 // $dbcon_insert = new mysqli('localhost','root','','ajax_in_crud') or die('couldnt connect to database');
